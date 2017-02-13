@@ -1,0 +1,25 @@
+version: '2'
+services:
+    database:
+        build: ./database
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: aden
+            MYSQL_DATABASE: aden
+            MYSQL_USER: aden
+            MYSQL_PASSWORD: aden
+
+    server:
+        build: ./server
+        ports:
+            - 80:8080
+        restart: always
+        volumes:
+            - ./web:/home/site/web
+        environment:
+            NGINX_WEBROOT: /home/site/web
+            VARNISH_CONFIG: /etc/varnish/default.vcl
+            CACHE_SIZE: 128m
+            VARNISHD_PARAMS: -p default_ttl=3600 -p default_grace=3600
+            VARNISH_PORT: 8080
+            BACKEND_PORT: 8888
